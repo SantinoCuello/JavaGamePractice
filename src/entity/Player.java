@@ -16,6 +16,7 @@ public class Player extends Entity{
 
     public final int screenX;
     public final int screenY;
+    int hasKey = 0;
 
     public Player(GamePanel gp,KeyHandler keyH) {
         this.gp = gp;
@@ -25,6 +26,10 @@ public class Player extends Entity{
         screenY = gp.screenHeight /2 - (gp.tileSize /2);
 
         solidArea = new Rectangle(12,18,24,33);
+        solidAreaDefaultX = solidArea.x;
+        solidAreaDefaultY = solidArea.y;
+
+
 
         setDefaultValues();
         getPlayerImage();
@@ -48,7 +53,7 @@ public class Player extends Entity{
     public void setDefaultValues(){ //Aplica valores estandar del personaje
 
         worldX = gp.tileSize * 25;
-        worldY = gp.tileSize * 49;
+        worldY = gp.tileSize * 45;
         speed = 4; 
         direction = "down";
     }
@@ -78,6 +83,10 @@ public class Player extends Entity{
         collisionOn = false;
         gp.cChecker.checkTile(this);
 
+        //Ver colisiones con objetos
+        int objIndex = gp.cChecker.checkObject(this, true);
+        pickUpObject(objIndex);
+
         //Si collisionOn es false, el jugador pude moverse
         if(collisionOn == false){
             
@@ -100,6 +109,28 @@ public class Player extends Entity{
             spriteCounter = 0;
         }
 
+        }
+
+    }
+
+    public void pickUpObject(int i){
+
+        if(i != 999){ //Si es 999 es porque no toque ningun objeto
+
+            String objectName = gp.obj[i].name;
+
+            switch (objectName) {
+                case "Key":
+                    hasKey++;           //Agrega llave
+                    gp.obj[i] = null;   //Borra llave del mapa
+                    break;
+                case "Door":
+                    if (hasKey > 0) {
+                        gp.obj[i] = null;   //Borra puerta
+                        hasKey--;           //Quita llave
+                    }
+                    break;
+            }
         }
 
     }
