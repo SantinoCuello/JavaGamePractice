@@ -121,14 +121,21 @@ public class Player extends Entity{
 
             switch (objectName) {
                 case "Key":
+                    gp.playSE(1);
                     hasKey++;           //Agrega llave
                     gp.obj[i] = null;   //Borra llave del mapa
                     break;
                 case "Door":
+                    gp.playSE(3);
                     if (hasKey > 0) {
                         gp.obj[i] = null;   //Borra puerta
                         hasKey--;           //Quita llave
                     }
+                    break;
+                case "Boots":
+                    gp.playSE(2);
+                    speed += 2;         //Aumenta velocidad
+                    gp.obj[i] = null;   //Borra botas del mapa
                     break;
             }
         }
