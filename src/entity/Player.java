@@ -4,9 +4,12 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.nio.Buffer;
+
 import javax.imageio.ImageIO;
 import main.GamePanel;
 import main.KeyHandler;
+import main.UtilityTool;
 
 public class Player extends Entity{
 
@@ -36,18 +39,30 @@ public class Player extends Entity{
     }
 
     public void getPlayerImage(){
-        try {
-            down1 = ImageIO.read(getClass().getResourceAsStream("/res/player/per1.png"));
-            down2 = ImageIO.read(getClass().getResourceAsStream("/res/player/per2.png"));
-            left2 = ImageIO.read(getClass().getResourceAsStream("/res/player/per3.png"));
-            left1 = ImageIO.read(getClass().getResourceAsStream("/res/player/per4.png")); 
-            right1 = ImageIO.read(getClass().getResourceAsStream("/res/player/per5.png")); 
-            right2 = ImageIO.read(getClass().getResourceAsStream("/res/player/per6.png")); 
-            up1 = ImageIO.read(getClass().getResourceAsStream("/res/player/per7.png")); 
-            up2 = ImageIO.read(getClass().getResourceAsStream("/res/player/per8.png"));    
-        } catch (IOException e) {
+        
+        up1 = setup("per7");
+        up2 = setup("per8");
+        down1 = setup("per1");
+        down2 = setup("per2");
+        left1 = setup("per4");
+        left2 = setup("per3");
+        right1 = setup("per5");
+        right2 = setup("per6");
+
+    }
+
+    public BufferedImage setup(String imageName){
+         
+        UtilityTool uTool = new UtilityTool();
+        BufferedImage image = null;
+
+        try{
+            image = ImageIO.read(getClass().getResourceAsStream("/res/player/" + imageName + ".png")); 
+            image = uTool.scaledImage(image, gp.tileSize, gp.tileSize);
+        }catch(IOException e){
             e.printStackTrace();
         }
+        return image;
     }
 
     public void setDefaultValues(){ //Aplica valores estandar del personaje
@@ -192,7 +207,7 @@ public class Player extends Entity{
                 break;
         }
         
-        g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+        g2.drawImage(image, screenX, screenY, null);
     
     }
 

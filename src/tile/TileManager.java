@@ -1,12 +1,16 @@
 package tile;
 
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import javax.imageio.ImageIO;
+import javax.swing.text.Utilities;
+
 import main.GamePanel;
+import main.UtilityTool;
 
 
 public class TileManager {
@@ -25,27 +29,31 @@ public class TileManager {
     }
 
     public void getTileImage(){
-
-        try {
             
-            tile[0] = new Tile();
-            tile[0].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/tile1.png"));
-            tile[1] = new Tile();
-            tile[1].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/tile2.png"));
-            tile[1].collision = true;
-            tile[2] = new Tile();
-            tile[2].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/tile3.png"));
-            tile[2].collision = true;
-            tile[3] = new Tile();
-            tile[3].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/tile4.png"));
-            tile[5] = new Tile();
-            tile[5].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/tile5.png"));
-            tile[4] = new Tile();
-            tile[4].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/tile6.png"));
+            setup(0, "tile1", false);
+            setup(1, "tile2", true);
+            setup(2, "tile3", true);
+            setup(3, "tile4", false);
+            setup(4, "tile6", false);
+            setup(5, "tile5", false);
 
-        } catch (IOException e) {
+    }
+
+    public void setup(int index, String imagePath, boolean collision){
+
+        UtilityTool uTool = new UtilityTool();
+
+        try{
+
+            tile[index] = new Tile();
+            tile[index].image = ImageIO.read(getClass().getResourceAsStream("/res/tiles/" + imagePath + ".png"));
+            tile[index].image = uTool.scaledImage(tile[index].image, gp.tileSize, gp.tileSize);
+            tile[index].collision = collision;
+
+        }catch(IOException e){
             e.printStackTrace();
         }
+
     }
 
     public void loadMap(String filePath){ //Escanea linea a linea el archivo map y mete los numeros en el array mapTileNum
@@ -105,7 +113,7 @@ public class TileManager {
                worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
                worldY - gp.tileSize < gp.player.worldY + gp.player.screenY){
 
-                g2.drawImage(tile[tileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+                g2.drawImage(tile[tileNum].image, screenX, screenY, null);
                 
             }
 
